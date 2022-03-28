@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "npm server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@braid-protocol/client": "^1.0.0",
