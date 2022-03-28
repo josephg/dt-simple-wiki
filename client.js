@@ -1,13 +1,6 @@
 import {default as init, Doc} from 'diamond-types-web'
 import { subscribe } from "@braid-protocol/client"
 
-const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'
-const randomId = (len = 12) => (
-  Array.from(crypto.getRandomValues(new Uint8Array(len)))
-    .map(x => letters[x % letters.length])
-    .join('')
-)
-
 const calcDiff = (oldval, newval) => {
   // Strings are immutable and have reference equality. I think this test is O(1), so its worth doing.
   if (oldval === newval) return {pos: 0, del: 0, ins: ''}
@@ -48,7 +41,7 @@ const calcDiff = (oldval, newval) => {
 
   const braid = await subscribe('/data', {
     parseDoc(contentType, data) {
-      const id = randomId()
+      const id = Math.random().toString(36).slice(2)
       console.log('id', id)
 
       let doc = Doc.fromBytes(data, id)
