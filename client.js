@@ -46,14 +46,13 @@ const calcDiff = (oldval, newval) => {
       const id = Math.random().toString(36).slice(2)
       console.log('id', id)
 
-      let doc = Doc.fromBytes(data, id)
-      return doc
+      return Doc.fromBytes(data, id)
     },
     applyPatch(doc, patchType, patch) {
       // console.log('applyPatch')
       // console.log('doc', JSON.stringify(Array.from(doc.toBytes())))
       // console.log('patch', JSON.stringify(Array.from(patch)))
-      let merge_version = doc.mergeBytes(patch)
+      doc.mergeBytes(patch)
       return doc
     }
   })
@@ -84,6 +83,10 @@ const calcDiff = (oldval, newval) => {
         redirect: 'follow',
         body: patch,
       })
+
+      if (response.status >= 400) {
+        throw Error(`Server rejected change: ${response.status}`)
+      }
 
       server_version = doc.mergeVersions(server_version, sent_version)
       console.log('server version now', server_version)
