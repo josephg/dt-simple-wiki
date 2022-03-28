@@ -32,41 +32,39 @@ const calcDiff = (oldval, newval) => {
 }
 
 ;(async () => {
-
+  // 1
   await init()
   console.log('ok')
 
   const elem = document.getElementsByTagName("textarea")[0]
   console.log(elem)
 
+  // 2
+  // const braid = await subscribe('https://wiki.seph.codes/api/data/wiki/asdf', {
   const braid = await subscribe('/data', {
     parseDoc(contentType, data) {
       const id = Math.random().toString(36).slice(2)
       console.log('id', id)
 
       let doc = Doc.fromBytes(data, id)
-      let version = doc.getLocalVersion()
-      console.log('v', Array.from(version), 'contents', JSON.stringify(doc.get()))
-      console.log([...doc.get()])
-
-      return [doc, version]
+      return doc
     },
-    applyPatch([doc, version], patchType, patch) {
+    applyPatch(doc, patchType, patch) {
       // console.log('applyPatch')
       // console.log('doc', JSON.stringify(Array.from(doc.toBytes())))
       // console.log('patch', JSON.stringify(Array.from(patch)))
       let merge_version = doc.mergeBytes(patch)
-      let new_version = doc.mergeVersions(version, merge_version)
-      return [doc, new_version]
+      return doc
     }
   })
 
-  const [doc, initialVersion] = braid.initialValue
+  const doc = braid.initialValue
 
   console.log('doc content', doc.get())
 
+  // 3
   let last_value = doc.get()
-  let last_version = initialVersion
+  let last_version = doc.getLocalVersion()
 
   let server_version = last_version
 
